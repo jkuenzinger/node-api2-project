@@ -19,9 +19,10 @@ router.post('/', (req, res) => {
         res.status(500).json({message: "server error on post"})
     })
 })
+
 router.post('/:id/comments', (req,res)=>{
     const {id}=req.params;
-    db.findPostComments(id)
+    posts.findPostComments(id)
     .then( comments =>{
         res.status(201).json(comments)
     })
@@ -37,7 +38,7 @@ router.post('/:id/comments', (req,res)=>{
 
 router.get('/:id', (req, res) => {
     const {id}=req.params;
-    db.findById(id)
+    posts.findById(id)
     .then(posts => {
         if(posts.length>0){
             res.status(200).json(posts)
@@ -49,10 +50,11 @@ router.get('/:id', (req, res) => {
         res.status(500).json({error:'the information was not recieved'})
     })
 })
+
 // get request by comment id
 router.get("/:id/comments", (req, res) => {
     const {id}=req.params;
-    db.findPostComments(id)
+    posts.findPostComments(id)
     .then(comment => {
         if(comment.length>0){
             res.status(200).json(comment)
@@ -76,10 +78,11 @@ router.get('/', (req, res) => {
      })
 })
 
+
 router.put("/:id", (req,res)=>{
     const {id}=req.params;
     const body=req.body
-    db.findById(id)
+    posts.findById(id)
     .then(postid=>{
         if (!postid.length){
             res.status(404).json({ message: "The post with the specified ID does not exist."})
@@ -87,7 +90,7 @@ router.put("/:id", (req,res)=>{
         else if (!body.title || !body.contents ){
              res.status(400).json({errorMessage: "Please provide title and contents for the post."})
         } else if (body.title && body.contents){
-            db.update(id, body)
+            posts.update(id, body)
                 .then(put=>{
                     res.status(200).json(body)
                 })
